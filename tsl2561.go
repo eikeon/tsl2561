@@ -138,7 +138,9 @@ func (t *TSL2561) Broadband() chan int {
 			select {
 			case <-ticker.C:
 				if err := t.On(); err != nil {
-					log.Fatal("could not turn on:", err)
+					log.Println("WARNING: could not turn on: ", err)
+					close(broadband)
+					return
 				}
 				time.Sleep(t.IntegrationDuration())
 
@@ -149,7 +151,9 @@ func (t *TSL2561) Broadband() chan int {
 				}
 
 				if err := t.Off(); err != nil {
-					log.Fatal("Could not turn off:", err)
+					log.Println("WARNING: Could not turn off: ", err)
+					close(broadband)
+					return
 				}
 			}
 		}
